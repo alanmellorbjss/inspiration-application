@@ -10,12 +10,11 @@ cache:
     - target/
 
 build:
-  stage: buildparallel
-  script:
-    - echo "run in parallel"
   stage: build
   script:
     - mvn -B clean package --file pom.xml
+  script:
+    - echo "some output here"
 
 test:
   stage: test

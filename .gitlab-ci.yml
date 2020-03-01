@@ -13,6 +13,7 @@ build:
   stage: build
   script:
     - mvn -B clean package --file pom.xml
+  stage: build
   script:
     - echo "some output here"
 

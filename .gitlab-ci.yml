@@ -24,13 +24,13 @@ build:
     - mvn dependency:tree
 
 analysis:
-  stage: checkstyle
+  stage: analysis
   script:
     - echo "disabled for now as this fails the whole build"
     ## - mvn checkstyle:check
 
 unit-test:
-  stage: unit test
+  stage: unit-test
   script:
     - mvn test
   artifacts:
@@ -39,11 +39,11 @@ unit-test:
           - target/surefire-reports/TEST-*.xml
 
 integration-test:
-  stage: integration test
+  stage: integration-test
   script:
     - mvn verify -DskipTests=true
 
 package:
-  stage: fatjar
+  stage: package
   script:
     - mvn package -DskipTests=true

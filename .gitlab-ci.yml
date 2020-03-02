@@ -10,6 +10,7 @@ cache:
     - target/
 
 build:
+  parallel: 2
   stage: build
   script:
     - mvn -B clean package --file pom.xml

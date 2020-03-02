@@ -40,8 +40,8 @@ unit-test:
 
 integration-test:
   stage: integration test
-    script:
-      - mvn verify -DskipTests=true
+  script:
+    - mvn verify -DskipTests=true
 
 package:
   stage: fatjar

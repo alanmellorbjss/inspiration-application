@@ -47,3 +47,8 @@ package:
   stage: package
   script:
     - mvn package -DskipTests=true
+
+deploy:
+  stage: deploy
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY

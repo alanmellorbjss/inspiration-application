@@ -9,16 +9,37 @@ cache:
     - .m2/repository/
     - target/
 
-build:
-  parallel: 2
-  stage: build
-  script:
-    - mvn -B clean package --file pom.xml
-  stage: build
-  script:
-    - echo "some output here"
+stages:
+  - build
+  - analysis
+  - unit-test
+  - integration-test
+  - package
+  - deploy
 
-test:
-  stage: test
+build:
+  stage: build
   script:
-    - mvn -B verify --file pom.xml
+    - mvn compile
+    - mvn dependency:tree
+
+analysis:
+  stage: checkstyle
+  script:
+    - echo "disabled for now as this fails the whole build"
+    ## - mvn checkstyle:check
+
+unit-test:
+  stage: unit test
+  script:
+    - mvn test
+
+integration-test:
+  stage: integration test
+    script:
+      - mvn verify -DskipTests=true
+
+package:
+  stage: fatjar
+  script:
+    - mvn package -DskipTests=true

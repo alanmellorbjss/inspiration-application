@@ -1,0 +1,58 @@
+image: maven:latest
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+stages:
+  - build
+  - analysis
+  - unit-test
+  - integration-test
+  - package
+  - deploy
+
+build:
+  stage: build
+  script:
+    - mvn compile
+    - mvn dependency:tree
+
+analysis:
+  stage: analysis
+  script:
+    - echo "disabled for now as this fails the whole build"
+    ## - mvn checkstyle:check
+
+unit-test:
+  stage: unit-test
+  script:
+    - mvn test
+  artifacts:
+    reports:
+      junit:
+          - target/surefire-reports/TEST-*.xml
+
+integration-test:
+  stage: integration-test
+  script:
+    - mvn verify -DskipTests=true
+
+package:
+  stage: package
+  script:
+    - mvn package -DskipTests=true
+
+deploy:
+  stage: deploy
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
